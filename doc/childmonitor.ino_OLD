@@ -1,0 +1,45 @@
+TCPClient client;
+
+byte server[] = { 192, 168, 1, 253 }; // Lagerwall 1 AP
+
+void setup() {
+    Serial.begin();
+    Serial.println("Child monitor");
+    Serial.println("connecting...");
+
+if (client.connect(server, 80))
+  {
+    Serial.println("connected");
+    client.println("GET /update_clients.asp HTTP/1.1");
+    Serial.println("GET /update_clients.asp HTTP/1.1");
+    client.println("Host: 192.168.1.253");
+    Serial.println("Host: 192.168.1.253");
+    client.println();
+    Serial.println("Request sent: Waiting for result");
+  }
+  else
+  {
+    Serial.println("connection failed");
+  }
+
+}
+
+void loop() {
+ Serial.println("loop");
+
+
+ if (client.available())
+  {
+    char c = client.read();
+    Serial.print(c);
+  }
+
+  if (!client.connected())
+  {
+    Serial.println();
+    Serial.println("disconnecting.");
+    client.stop();
+    for(;;);
+  }    
+}
+
