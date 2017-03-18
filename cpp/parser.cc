@@ -45,28 +45,38 @@ void populateBuffer(std::string ipaddress, std::string *readBuffer) {
 	curl_easy_cleanup(curl);
 }
 
-int main(){
-	std::string readBuffer;
+void addMacs(std::string ipaddress, std::list<std::string> *macs) {
 	std::string key1 ("wlList_2g: [");
 	std::string key2 ("wlList_5g: [");
 	std::string key3 ("wlList_5g_2: [");
+	std::string readBuffer;
+	populateBuffer(ipaddress, &readBuffer);
+	parseMacs(readBuffer, key1, key2, macs);
+	parseMacs(readBuffer, key2, key3, macs);
+}
+
+bool containsMac(std::string mac, std::list<std::string> *macs) {
+	for (std::list<std::string>::iterator it=macs->begin(); it != macs->end(); ++it) {
+		if (it->compare(mac) == 0) {
+			return true;
+		}
+	}
+	return false;
+}
+
+int main(){
 
 	std::list<std::string> macs;
+	addMacs("192.168.1.253", &macs);
+	addMacs("192.168.1.254", &macs);
 
-	populateBuffer("192.168.1.253", &readBuffer);
-	parseMacs(readBuffer, key1, key2, &macs);
-	parseMacs(readBuffer, key2, key3, &macs);
+	bool kevin = containsMac("04:4B:ED:7D:7F:72", &macs);
+	bool elin = containsMac("24:F0:94:71:1B:03", &macs);
 
-	readBuffer = "";
-	populateBuffer("192.168.1.254", &readBuffer);
-	parseMacs(readBuffer, key1, key2, &macs);
-	parseMacs(readBuffer, key2, key3, &macs);
-
-//	std::cout << readBuffer << std::endl;
-//	std::cout << "----------------" << std::endl;
+	std::cout << "Kevin " << kevin << '\n';
+	std::cout << "Elin " << elin << '\n';
 
 	for (std::list<std::string>::iterator it=macs.begin(); it != macs.end(); ++it) {
 		std::cout << *it << '\n';
 	}
-	return 0;
 }
