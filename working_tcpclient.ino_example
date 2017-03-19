@@ -1,0 +1,37 @@
+TCPClient client;
+
+byte server[] = { 192,168,1,254};
+bool running = true;
+void setup() {
+	Serial.begin(9600);
+
+	for(int i = 20; i > 0; i--) {
+		Serial.println("Starting in " + String(i,DEC));
+		delay(1000);
+	}
+	Serial.println("connecting...");
+
+	if (client.connect(server, 80)) {
+		Serial.println("connected");
+		client.println("GET /update_clients.asp HTTP/1.0");
+		client.println("HOST: router");
+		client.println("Content-Length: 0");
+		client.println();
+	} else {
+		Serial.println("connection failed");
+	}
+}
+
+void loop() {
+	if (client.available()) {
+		char c = client.read();
+		Serial.print(c);
+	}
+
+	if (running && !client.connected()) {
+		Serial.println();
+		Serial.println("disconnecting.");
+		client.stop();
+		running = false;
+	}
+}
