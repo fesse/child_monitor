@@ -1,4 +1,4 @@
-// Simple Hello World
+// Simple MAC finder
 
 #include <iostream>
 #include <list>
