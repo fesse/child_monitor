@@ -140,16 +140,23 @@ int main() {
 
   std::list<std::string> macs;
   addMacs("192.168.1.253", &macs);
+
+  for (std::list<std::string>::iterator it = macs.begin(); it != macs.end(); ++it) {
+    std::cout << *it << '\n';
+  }
+
+  std::cout << "-----\n";
+
   addMacs("192.168.1.254", &macs);
 
+  for (std::list<std::string>::iterator it = macs.begin(); it != macs.end(); ++it) {
+    std::cout << *it << '\n';
+  }
+  std::cout << "-----\n";
+  
   bool kevin = containsMac("04:4B:ED:7D:7F:72", &macs);
   bool elin = containsMac("24:F0:94:71:1B:03", &macs);
 
   std::cout << "Kevin " << kevin << '\n';
   std::cout << "Elin " << elin << '\n';
-
-  for (std::list<std::string>::iterator it = macs.begin(); it != macs.end();
-       ++it) {
-    std::cout << *it << '\n';
-  }
 }
