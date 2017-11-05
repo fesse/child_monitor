@@ -63,7 +63,18 @@ void setup() {
 void loop() {
   updateMACState();
   updateDiodState();
-  delay(30000);
+  wait();
+}
+
+void wait() {
+  bool allPresent = true;
+  for (int i = 0; i < MOBILE_COUNT; i++) {
+    if (!mobiles[i].present) {
+      allPresent = false;
+    }
+  }
+  // Wait 5 minutes if all are present, otherwise 30 seconds.
+  delay(allPresent?300000:30000);
 }
 
 void addMobile(String mac, int position) {
