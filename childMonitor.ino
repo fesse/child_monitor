@@ -18,6 +18,7 @@
 #define RED 0xFF000050
 #define GREEN 0x00FF0050
 #define YELLOW 0xFFFF0050
+#define ORANGE 0xFFa500FF
 
 #define MOBILE_COUNT 2
 
@@ -250,15 +251,15 @@ void updateDiodState() {
     struct MOBILE *mobile = &mobiles[i];
     if (errorCounter > 10) {
       // More than 10 errors in a row when trying to update MAC presens.
-      mobile->color = YELLOW;
+      mobile->color = ORANGE;
       mobile->count = 0;
     } else if (mobile->present) {
       // Always set Green if present.
       mobile->color = GREEN;
       mobile->count = 0;
-    } else if (mobile->hourLastPresent > 18 || mobile->hourLastPresent < 7) {
+    } else if (mobile->hourLastPresent > 21 || mobile->hourLastPresent < 7) {
       // If has been present (Red -> Green) between 22 and 6 then count up.
-      if (mobile->count > 5) {
+      if (mobile->count > 10) {
         // 10 times non present, but has been present between 22 and 6.
         // Display as Yellow since this might be a case of out of battery.
         mobile->color = YELLOW;
