@@ -2,6 +2,8 @@
 #include <list>
 
 /**
+ * Developed against Asus RT-AC66U
+ *
  * A define AUTHENTICATION needs to be provided.
  * It should be a Base64 encoded String containing username:password
  * Exactly as a Basic Authentication value.
@@ -11,13 +13,14 @@
  * Example:
  * #define AUTHENTICATION "YWRtaW46cGFzc3dvcmQK"
  */
+
 #include "authentication.h"
 
 // RGBA
-#define WHITE 0xFFFFFF50
-#define RED 0xFF000050
-#define GREEN 0x00FF0050
-#define YELLOW 0xFFFF0050
+#define WHITE 0xFFFFFF70
+#define RED 0xFF000070
+#define GREEN 0x00FF0070
+#define YELLOW 0xFFFF070
 #define ORANGE 0xFFa500FF
 
 #define MOBILE_COUNT 2
@@ -43,6 +46,36 @@ TCPClient client;
 #define PIXEL_TYPE WS2812B
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, PIXEL_TYPE);
 
+/**
+ * Debug code
+ */
+void printAllMacs(std::list<String> *macs) {
+  Serial.println("* MAC:s present *");
+  for (std::list<String>::iterator it = macs->begin(); it != macs->end();
+       ++it) {
+    Serial.println(*it);
+  }
+  Serial.println("*****************");
+}
+
+void printStates() {
+  for (int i = 0; i < MOBILE_COUNT; i++) {
+    Serial.println("* Current state *");
+    struct MOBILE *mobile = &mobiles[i];
+    Serial.print("MAC: ");
+    Serial.println(mobile->mac);
+    Serial.print("Color: ");
+    Serial.println(mobile->color);
+    Serial.print("Count: ");
+    Serial.println(mobile->count);
+    Serial.print("Hour last present: ");
+    Serial.println(mobile->hourLastPresent);
+    Serial.print("Present: ");
+    Serial.println(mobile->present);
+    Serial.println("*****************");
+  }
+}
+
 void setup() {
   Serial.begin(9600);
 
@@ -54,15 +87,12 @@ void setup() {
   strip.show();
 
   errorCounter = 0;
-  for (int i = 20; i > 0; i--) {
-    Serial.println("Starting in " + String(i, DEC));
-    delay(1000);
-  }
 }
 
 void loop() {
   updateMACState();
   updateDiodState();
+  //  printStates();
   wait();
 }
 
@@ -74,7 +104,7 @@ void wait() {
     }
   }
   // Wait 5 minutes if all are present, otherwise 30 seconds.
-  delay(allPresent?300000:30000);
+  delay(allPresent ? 300000 : 30000);
 }
 
 void addMobile(String mac, int position) {
@@ -242,19 +272,10 @@ void updateMACState() {
     }
     mobiles[i].present = present;
   }
-  //	Serial.print("Kevin ");
-  //    Serial.println(kevin);
-  //    Serial.print("Elin ");
-  //    Serial.println(elin);
-  //    for (std::list<String>::iterator it=macs.begin(); it != macs.end();
-  //    ++it) {
-  //		Serial.println(*it);
-  //    }
-  //	Serial.println("");
 
+  // printAllMacs(&macs);
   macs.clear();
   errorCounter = 0;
-  Serial.println("State updated");
 }
 
 void updateDiodState() {
@@ -290,7 +311,7 @@ void updateDiodState() {
 
 void display(int diodNumber, uint32_t color) {
   strip.setColorDimmed(diodNumber, color >> 24 & 255, color >> 16 & 255,
-                       color >> 8 & 2550, color & 255);
+                       color >> 8 & 255, color & 255);
   strip.show();
 }
 

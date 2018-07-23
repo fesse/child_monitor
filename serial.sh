@@ -1,2 +1,2 @@
 #!/bin/bash
-while particle serial monitor /dev/ttyACM1; do :; done
+while particle serial monitor ; do :; done
