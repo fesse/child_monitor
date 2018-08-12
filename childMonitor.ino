@@ -20,7 +20,7 @@
 #define WHITE 0xFFFFFF70
 #define RED 0xFF000070
 #define GREEN 0x00FF0070
-#define YELLOW 0xFFFF070
+#define YELLOW 0xFFFF0070
 #define ORANGE 0xFFa500FF
 
 #define MOBILE_COUNT 2
@@ -289,7 +289,7 @@ void updateDiodState() {
       // Always set Green if present.
       mobile->color = GREEN;
       mobile->count = 0;
-    } else if (mobile->hourLastPresent > 21 || mobile->hourLastPresent < 7) {
+    } else if ((mobile->hourLastPresent > 21 || mobile->hourLastPresent < 7) && (Time.hour() > 21 || Time.hour() < 7)) {
       // If has been present (Red -> Green) between 22 and 6 then count up.
       if (mobile->count > 10) {
         // 10 times non present, but has been present between 22 and 6.
