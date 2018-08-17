@@ -82,7 +82,7 @@ void setup() {
   Time.zone(1);
 
   strip.begin();
-  addMobile("04:4B:ED:7D:7F:72", 0); // Kevin
+  addMobile("64:A2:F9:83:25:D5", 0); // Kevin
   addMobile("24:F0:94:71:1B:03", 1); // Elin
   strip.show();
 
